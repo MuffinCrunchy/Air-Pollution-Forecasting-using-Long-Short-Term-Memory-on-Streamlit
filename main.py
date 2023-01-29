@@ -108,14 +108,14 @@ elif authentication_status:
 
         return df_train, df_valid
 
-    def get_slm(norm_data, look_back, batch_size):
-        slm_data = TimeseriesGenerator(norm_data, norm_data, length=look_back, batch_size=batch_size)
+    def get_slm(norm_data, timesteps, batch_size):
+        slm_data = TimeseriesGenerator(norm_data, norm_data, length=timesteps, batch_size=batch_size)
 
         return slm_data
 
     def set_model(lstm_1, lstm_2, lstm_3):
         model = tf.keras.Sequential()
-        model.add(tf.keras.layers.LSTM(units = lstm_1, return_sequences = True, input_shape = (look_back, 1)))
+        model.add(tf.keras.layers.LSTM(units = lstm_1, return_sequences = True, input_shape = (timesteps, 1)))
         model.add(tf.keras.layers.Dropout(0.2))
         model.add(tf.keras.layers.LSTM(units = lstm_2, return_sequences = True))
         model.add(tf.keras.layers.Dropout(0.2))
@@ -226,22 +226,33 @@ elif authentication_status:
     # SLM Settings
     st.sidebar.header("Supervised Learning Problem")
 
-    # Select Look Back
-    look_back = st.sidebar.slider('Timesteps', 1, 10, 1)
+    # Select Timesteps
+    timesteps = st.sidebar.slider('Timesteps', 1, 10, 1)
     
-    # Select Batch Size
-    st.sidebar.subheader("Batch Size")
-    batch_size_train = st.sidebar.slider('Train', 1, 30, 30)
-    batch_size_valid = st.sidebar.slider('Validate', 1, 7, 7)
-    batch_size_test = st.sidebar.slider('Test', 1, 7, 1)
+    # Define Batch Size
+    batch_size_train = 0
+    batch_size_valid = 0
+    batch_size_test = 0
+    if choose_time == '1 Year':
+        batch_size_train = 7
+        batch_size_valid = 1
+        batch_size_test = 1
+    elif choose_time == '5 Years':
+        batch_size_train = 30
+        batch_size_valid = 7
+        batch_size_test = 1
+    elif choose_time == '10 Years':
+        batch_size_train = 30
+        batch_size_valid = 7
+        batch_size_test = 1
 
     # Supervised Learning Model
-    slm_train = get_slm(norm_train, look_back, batch_size_train)
-    slm_valid = get_slm(norm_valid, look_back, batch_size_valid)
-    slm_test = get_slm(norm_test, look_back, batch_size_test)
+    slm_train = get_slm(norm_train, timesteps, batch_size_train)
+    slm_valid = get_slm(norm_valid, timesteps, batch_size_valid)
+    slm_test = get_slm(norm_test, timesteps, batch_size_test)
 
     # Data Test for Predict
-    for_predict = norm_test[look_back:]
+    for_predict = norm_test[timesteps:]
 
     # Model Parameter Settings
     st.sidebar.header("Model Parameter")
@@ -254,7 +265,7 @@ elif authentication_status:
 
     # Select Epochs
     st.sidebar.subheader("Number of Epochs")
-    epochs = st.sidebar.slider('First Layer', 10, 50, step=10)
+    epochs = st.sidebar.slider('Epochs', 10, 50, step=10)
 
     # Initialize Model
     st.header("Architecture Model")
