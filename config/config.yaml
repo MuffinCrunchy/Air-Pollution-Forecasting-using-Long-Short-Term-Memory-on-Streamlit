@@ -1,0 +1,17 @@
+credentials:
+  usernames:
+    lemoncoffee:
+      email: reine@gmail.com
+      name: Sakasaki
+      password: '$2b$12$WAaVwJRHjRuNEHCZuVQDCekcja4LAybeEC.CpkEs9tXrr7ULQ2mH2'
+    muffincrunchy:
+      email: suisei@gmail.com
+      name: Arasaki
+      password: '$2b$12$NVac2zXfNMxR1uZ2BehiWOd6mwxAqbucMzKB7QoV2cF.iX0t8BQAe'
+cookie:
+  expiry_days: 30
+  key: some_sign_key
+  name: some_cookie_name
+preauthorized:
+  emails:
+  - holo@gmail.com
